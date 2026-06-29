@@ -1,47 +1,139 @@
 const Book = require("../models/book");
 
-// GET all books
+// =========================
+// GET ALL BOOKS
+// =========================
 const getBooks = async (req, res) => {
-  const books = await Book.find();
-  res.json(books);
+  try {
+    const books = await Book.find()
+      .populate("owner", "name email")
+      .populate("borrowedBy", "name email");
+
+    res.json(books);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
-// ADD a new book
+// =========================
+// ADD BOOK
+// =========================
 const addBook = async (req, res) => {
-  const { title, author, description } = req.body;
-
-  const book = await Book.create({
-    title,
-    author,
-    description,
-  });
-
-  res.status(201).json(book);
-};
-
-
-const deleteBook = async (req, res) => {
-  await Book.findByIdAndDelete(req.params.id);
-  res.json({ message: "Book deleted" });
-};
-const updateBook = async (req, res) => {
-  const { title, author, description } = req.body;
-
-  const book = await Book.findByIdAndUpdate(
-    req.params.id,
-    {
+  try {
+    const {
       title,
       author,
       description,
-    },
-    { new: true }
-  );
+      image,
+      category,
+      genre,
+    } = req.body;
 
-  res.json(book);
+    const book = await Book.create({
+      title,
+      author,
+      description,
+      image,
+      category,
+      genre,
+      owner: req.user.id,
+    });
+
+    const newBook = await Book.findById(book._id)
+      .populate("owner", "name email");
+
+    res.status(201).json(newBook);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
+
+// =========================
+// UPDATE BOOK
+// =========================
+const updateBook = async (req, res) => {
+  try {
+    const {
+      title,
+      author,
+      description,
+      image,
+      category,
+      genre,
+    } = req.body;
+
+    const book = await Book.findById(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({
+        message: "Book not found",
+      });
+    }
+
+    // Only owner can edit
+    if (book.owner.toString() !== req.user.id) {
+      return res.status(401).json({
+        message: "Not authorized",
+      });
+    }
+
+    book.title = title;
+    book.author = author;
+    book.description = description;
+    book.image = image;
+    book.category = category;
+    book.genre = genre;
+
+    await book.save();
+
+    res.json(book);
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+// =========================
+// DELETE BOOK
+// =========================
+const deleteBook = async (req, res) => {
+  try {
+    const book = await Book.findById(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({
+        message: "Book not found",
+      });
+    }
+
+    // Only owner can delete
+    if (book.owner.toString() !== req.user.id) {
+      return res.status(401).json({
+        message: "Not authorized",
+      });
+    }
+
+    await book.deleteOne();
+
+    res.json({
+      message: "Book deleted successfully",
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getBooks,
   addBook,
-  deleteBook,
   updateBook,
+  deleteBook,
 };

@@ -1,11 +1,11 @@
 const authRoutes = require("./routes/authRoutes");
-console.log("authRoutes:", authRoutes);
+
 const bookRoutes = require("./routes/bookRoutes");
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-
+const requestRoutes = require("./routes/requestRoutes");
 dotenv.config();
 console.log(process.env.MONGO_URI);
 connectDB();
@@ -23,6 +23,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use("/api/books", bookRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/requests", requestRoutes);
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
