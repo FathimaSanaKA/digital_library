@@ -11,7 +11,7 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const bookRoutes = require("./routes/bookRoutes");
 
-consolr.log("Initializing server instance...");
+console.log("Initializing server instance...");
 // Initialize environment configuration rules
 dotenv.config();
 console.log("Initializing database connection with target cluster URI...");
