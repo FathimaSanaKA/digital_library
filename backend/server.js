@@ -19,7 +19,6 @@ connectDB();
 const app = express();
 
 // Global Middlewares
-app.use(cors());
 app.use(express.json());
 
 // 1. Host Production Frontend Static Assets
