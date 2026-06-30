@@ -32,7 +32,7 @@ app.use("/api/auth", authRoutes);
 
 // 3. Fallback Catchall SPA Router Handler
 // Ensures client-side routing sub-pages map directly back to the React application instance
-app.get('*', (req, res) => {
+app.get('/*splat', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
@@ -41,4 +41,4 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`Server running successfully on port ${PORT}`);
-});
+}); 
