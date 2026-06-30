@@ -246,13 +246,19 @@ body {
   font-size: 1.05rem;
 }
 
-.book-grid {
+/*.book-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 32px;
+}*/
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  align-items: start;
 }
 
-/* --- Premium Book Cards --- */
+/* --- Premium Book Cards --- 
 .book-card {
   background: var(--bg-surface);
   border: 1px solid var(--border-subtle);
@@ -261,6 +267,13 @@ body {
   transition: transform 0.4s var(--easing-smooth), 
               border-color 0.4s var(--easing-smooth), 
               box-shadow 0.4s var(--easing-smooth);
+}*/
+.book-card {
+  width: 100%;
+  max-width: 220px;
+  height: 320px;
+  display: flex;
+  flex-direction: column;
 }
 
 .book-card:hover {

@@ -5,17 +5,13 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 8080,
-    host: '0.0.0.0', // Allows you to access the frontend via GCP External IP
+    host: '0.0.0.0', 
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:5000', // Matches your backend's IPv4 address exactly
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         secure: false,
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
-            console.log('proxy error', err);
-          });
-        },
+        ws: true // Enables websocket proxying if nodemon/vite is hanging on handshake
       }
     }
   }
